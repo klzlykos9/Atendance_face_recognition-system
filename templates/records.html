@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="fw-bold mb-3">Attendance Records</h3>
+
+<table class="table table-bordered table-striped shadow">
+<thead class="table-dark">
+<tr>
+  <th>Name</th><th>Roll</th><th>Email</th><th>Time</th><th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for r in data %}
+<tr>
+  <td>{{ r.name }}</td>
+  <td>{{ r.roll_no }}</td>
+  <td>{{ r.email }}</td>
+  <td>{{ r.time_in }}</td>
+  <td>
+    <a href="/delete/{{ r.student_id }}" class="btn btn-danger btn-sm"
+       onclick="return confirm('Delete this student & attendance?');">Delete</a>
+  </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

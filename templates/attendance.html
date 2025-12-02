@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow p-4 col-md-6 mx-auto">
+  <h3 class="fw-bold text-center mb-3">Attendance</h3>
+
+  <video id="att_video" class="border rounded bg-dark mb-3"
+         width="320" height="240" autoplay playsinline></video>
+  <canvas id="att_canvas" width="320" height="240" class="d-none"></canvas>
+
+  <button id="startBtn" class="btn btn-primary w-100">Start Attendance</button>
+
+  <div id="result" class="alert mt-3 d-none"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const video = document.getElementById("att_video");
+const canvas = document.getElementById("att_canvas");
+const ctx = canvas.getContext("2d");
+const resultBox = document.getElementById("result");
+
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+  } catch (err) {
+    console.error("Camera error:", err);
+    resultBox.classList.remove("d-none");
+    resultBox.classList.add("alert-danger");
+    resultBox.innerHTML = "Unable to access camera: " + err.message;
+  }
+}
+
+startCamera();
+
+document.getElementById("startBtn").onclick = () => {
+  setInterval(() => {
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+
+    fetch("/recognize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: dataUrl })
+    })
+      .then(r => r.json())
+      .then(d => {
+        resultBox.classList.remove("d-none", "alert-success", "alert-danger");
+        if (!d.found) {
+          resultBox.classList.add("alert-danger");
+          resultBox.innerHTML = "Not recognized";
+        } else {
+          resultBox.classList.add("alert-success");
+          resultBox.innerHTML =
+            "<b>" + d.name + "</b><br>" +
+            "Roll: " + d.roll_no + "<br>" +
+            "Email: " + d.email + "<br>" +
+            "Time: " + d.time;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, 800); // capture roughly every 0.8s
+};
+</script>
+{% endblock %}

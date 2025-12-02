@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow p-4 col-md-6 mx-auto">
+  <h3 class="fw-bold text-center mb-3">Train Model</h3>
+  <p class="text-muted text-center">Click below to train LBPH face recognizer</p>
+
+  <button id="trainBtn" class="btn btn-primary w-100">Train Model</button>
+
+  <div class="alert mt-3 d-none" id="trainAlert"></div>
+
+  <script>
+    document.getElementById("trainBtn").onclick = ()=>{
+      fetch("/train").then(r=>r.json()).then(d=>{
+        let a=document.getElementById("trainAlert");
+        a.classList.remove("d-none");
+        a.classList.add(d.status=="success"?"alert-success":"alert-danger");
+        a.innerHTML=d.message;
+      });
+    };
+  </script>
+</div>
+{% endblock %}

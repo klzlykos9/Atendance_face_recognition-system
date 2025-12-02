@@ -1,0 +1,9 @@
+flask
+opencv-python
+numpy
+pandas
+pillow
+sqlalchemy
+python-dotenv
+gunicorn
+flask_sqlalchemy

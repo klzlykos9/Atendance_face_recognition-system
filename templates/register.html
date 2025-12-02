@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow p-4">
+  <h3 class="fw-bold text-center mb-3">Register New Student</h3>
+
+  <form id="registerForm">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Student ID</label>
+        <input type="number" id="student_id" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <input type="text" id="name" class="form-control" required>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Roll No</label>
+        <input type="text" id="roll_no" class="form-control">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-control">
+      </div>
+    </div>
+
+    <hr>
+
+    <h5 class="fw-bold">Camera Capture</h5>
+    <div class="row">
+      <div class="col-md-6 text-center">
+        <!-- native video element instead of WebcamJS -->
+        <video id="video" class="border rounded bg-dark mb-3"
+               width="320" height="240" autoplay playsinline></video>
+        <!-- hidden canvas for capturing frames -->
+        <canvas id="canvas" width="320" height="240" class="d-none"></canvas>
+        <button type="button" id="startCaptureBtn" class="btn btn-primary">
+          Start Auto Capture
+        </button>
+      </div>
+      <div class="col-md-6">
+        <p><b><span id="captureCount">0</span>/30 photos captured</b></p>
+        <div class="progress mb-3">
+          <div id="captureProgress" class="progress-bar" style="width:0%"></div>
+        </div>
+        <div id="thumbs" class="d-flex flex-wrap gap-2"
+             style="height:220px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <button type="submit" id="submitBtn"
+            class="btn btn-success w-100 mt-4" disabled>
+      Save Registration
+    </button>
+  </form>
+
+  <div class="alert mt-3 d-none" id="responseAlert"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+{% endblock %}
